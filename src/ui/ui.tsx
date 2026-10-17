@@ -63,19 +63,39 @@ export function Sheet(props: { open: boolean; onClose: () => void; title?: strin
     if (!open) return
     const vv = window.visualViewport
     if (!vv) return
+    let timer = 0
     const fit = () => {
       const el = ov.current
       if (!el) return
-      el.style.top = vv.offsetTop + 'px'
+      // clavier fermé : la zone visible = la fenêtre, et on remet la page à sa place (iOS la décale pour montrer le champ)
+      const closed = Math.abs(vv.height - window.innerHeight) < 80
+      if (closed) {
+        el.style.top = '0px'
+        el.style.height = '100%'
+        if (window.scrollY !== 0) window.scrollTo(0, 0)
+      } else {
+        el.style.top = vv.offsetTop + 'px'
+        el.style.height = Math.max(240, vv.height) + 'px'
+      }
       el.style.bottom = 'auto'
-      el.style.height = vv.height + 'px'
+    }
+    // le clavier met un moment à s'ouvrir ou à se fermer : on recale aussi juste après
+    const later = () => {
+      fit()
+      window.clearTimeout(timer)
+      timer = window.setTimeout(fit, 250)
     }
     fit()
-    vv.addEventListener('resize', fit)
+    vv.addEventListener('resize', later)
     vv.addEventListener('scroll', fit)
+    window.addEventListener('resize', later)
+    document.addEventListener('focusout', later)
     return () => {
-      vv.removeEventListener('resize', fit)
+      window.clearTimeout(timer)
+      vv.removeEventListener('resize', later)
       vv.removeEventListener('scroll', fit)
+      window.removeEventListener('resize', later)
+      document.removeEventListener('focusout', later)
     }
   }, [open])
   useEffect(() => {
