@@ -628,39 +628,60 @@ button.cell:active {
   position: fixed;
   inset: 0;
   z-index: 50;
+  box-sizing: border-box;
   background: #000a;
   display: flex;
-  align-items: flex-end;
+  align-items: flex-start;
   justify-content: center;
+  padding: calc(env(safe-area-inset-top, 0px) + 12px) 12px 12px;
   animation: fade 0.15s ease;
 }
+/* fenêtre flottante en haut de l'écran : elle passe au-dessus du calendrier et reste visible avec le clavier */
 .sheet {
+  position: relative;
+  box-sizing: border-box;
   width: 100%;
-  max-width: 430px;
-  max-height: 92%;
+  max-width: 406px;
+  max-height: 100%;
   overflow-y: auto;
   background: var(--panel);
-  border-top: 1px solid var(--line);
-  border-radius: 18px 18px 0 0;
-  padding: 8px 14px calc(20px + env(safe-area-inset-bottom));
-  animation: rise 0.2s ease;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 16px 14px 18px;
+  box-shadow: 0 20px 50px #000c;
+  animation: pop 0.18s ease;
   overscroll-behavior: contain;
 }
 .sheet--tall {
-  min-height: min(55dvh, 100%);
+  min-height: min(50dvh, 100%);
 }
 .sheet-grip {
-  width: 38px;
-  height: 4px;
-  border-radius: 2px;
-  background: var(--line);
-  margin: 4px auto 12px;
+  display: none;
+}
+.sheet-x {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  font-size: 26px;
+  line-height: 1;
+  color: var(--ink);
+  opacity: 0.6;
 }
 .sheet-title {
   font-size: 24px;
   font-weight: 400;
-  margin-bottom: 12px;
+  margin: 0 36px 12px 0;
   color: var(--ink);
+}
+@keyframes pop {
+  from {
+    transform: translateY(-14px) scale(0.98);
+    opacity: 0;
+  }
 }
 @keyframes rise {
   from {

@@ -113,7 +113,9 @@ export function Sheet(props: { open: boolean; onClose: () => void; title?: strin
   return (
     <div className="sheet-ov" ref={ov} onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
       <div className={'sheet' + (props.tall ? ' sheet--tall' : '')} ref={ref} role="dialog" aria-modal="true" aria-label={props.title}>
-        <div className="sheet-grip" />
+        <button className="sheet-x" onClick={onClose} aria-label="Fermer">
+          ×
+        </button>
         {props.title && <h2 className="sheet-title">{props.title}</h2>}
         {props.children}
       </div>
