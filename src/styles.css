@@ -487,7 +487,7 @@ ul {
 /* le haut (en-tête + page) ne bouge pas ; seul le calendrier défile */
 .top {
   flex: 0 1 auto;
-  max-height: 58dvh;
+  max-height: 62dvh;
   min-height: 0;
   overflow-y: auto;
   overscroll-behavior: contain;
@@ -495,7 +495,7 @@ ul {
 }
 .cal {
   flex: 1 1 0;
-  min-height: 140px;
+  min-height: 60px;
   overflow-y: auto;
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
@@ -634,7 +634,7 @@ button.cell:active {
 .sheet {
   width: 100%;
   max-width: 430px;
-  max-height: 86dvh;
+  max-height: 92%;
   overflow-y: auto;
   background: var(--panel);
   border-top: 1px solid var(--line);
@@ -644,7 +644,7 @@ button.cell:active {
   overscroll-behavior: contain;
 }
 .sheet--tall {
-  min-height: 55dvh;
+  min-height: min(55dvh, 100%);
 }
 .sheet-grip {
   width: 38px;
@@ -1765,4 +1765,26 @@ button.cell:active {
   background: #fff;
   color: #1f1f1f;
   margin: 4px 0 6px;
+}
+
+/* poignée entre le haut et le calendrier : glisser pour répartir l'écran, toucher pour tout donner au haut */
+.split {
+  flex: none;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  touch-action: none;
+  cursor: row-resize;
+  background: var(--panel);
+  border-top: 1px solid var(--line);
+}
+.split i {
+  width: 44px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--line);
+}
+.split + .cal {
+  margin-top: 0;
+  border-top: 0;
 }

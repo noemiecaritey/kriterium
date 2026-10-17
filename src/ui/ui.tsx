@@ -57,6 +57,27 @@ export function Header(props: {
 export function Sheet(props: { open: boolean; onClose: () => void; title?: string; children: ReactNode; tall?: boolean }) {
   const { open, onClose } = props
   const ref = useRef<HTMLDivElement>(null)
+  const ov = useRef<HTMLDivElement>(null)
+  // Sur téléphone, le clavier réduit la zone visible sans réduire la page : on cale la feuille sur la zone réellement visible
+  useEffect(() => {
+    if (!open) return
+    const vv = window.visualViewport
+    if (!vv) return
+    const fit = () => {
+      const el = ov.current
+      if (!el) return
+      el.style.top = vv.offsetTop + 'px'
+      el.style.bottom = 'auto'
+      el.style.height = vv.height + 'px'
+    }
+    fit()
+    vv.addEventListener('resize', fit)
+    vv.addEventListener('scroll', fit)
+    return () => {
+      vv.removeEventListener('resize', fit)
+      vv.removeEventListener('scroll', fit)
+    }
+  }, [open])
   useEffect(() => {
     if (!open) return
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose()
@@ -70,7 +91,7 @@ export function Sheet(props: { open: boolean; onClose: () => void; title?: strin
   }, [open, onClose])
   if (!open) return null
   return (
-    <div className="sheet-ov" onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
+    <div className="sheet-ov" ref={ov} onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
       <div className={'sheet' + (props.tall ? ' sheet--tall' : '')} ref={ref} role="dialog" aria-modal="true" aria-label={props.title}>
         <div className="sheet-grip" />
         {props.title && <h2 className="sheet-title">{props.title}</h2>}

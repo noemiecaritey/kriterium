@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Calendar } from './components/Calendar'
 import { DaySheet } from './components/DaySheet'
 import { RewardModal } from './components/Reward'
@@ -27,6 +27,24 @@ export default function App() {
   const route = useRoute()
   const [selected, setSelected] = useState(today())
   const [day, setDay] = useState<string | null>(null)
+  // hauteur choisie pour la zone du haut (null = automatique), gardée sur l'appareil
+  const [topH, setTopH] = useState<number | null>(() => {
+    try {
+      const v = Number(localStorage.getItem('kriterium:split'))
+      return v > 0 ? v : null
+    } catch {
+      return null
+    }
+  })
+  const topRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    try {
+      if (topH) localStorage.setItem('kriterium:split', String(topH))
+      else localStorage.removeItem('kriterium:split')
+    } catch {
+      /* ignore */
+    }
+  }, [topH])
   const events = useItems<EventT>('event')
   const [a, b] = route.parts
 
@@ -112,7 +130,38 @@ export default function App() {
 
   return (
     <div className="app">
-      <div className="top">{page}</div>
+      <div className="top" ref={topRef} style={topH ? { height: topH, maxHeight: 'calc(100dvh - 150px)', flex: 'none' } : undefined}>
+        {page}
+      </div>
+      <div
+        className="split"
+        role="separator"
+        aria-label="Agrandir ou réduire la zone du haut (glisse, ou touche pour basculer)"
+        onPointerDown={(e) => {
+          const el = topRef.current
+          if (!el) return
+          const startY = e.clientY
+          const startH = el.getBoundingClientRect().height
+          let moved = false
+          const mv = (ev: PointerEvent) => {
+            const dy = ev.clientY - startY
+            if (Math.abs(dy) > 4) moved = true
+            if (moved) setTopH(Math.max(90, Math.min(window.innerHeight - 150, Math.round(startH + dy))))
+          }
+          const up = () => {
+            window.removeEventListener('pointermove', mv)
+            window.removeEventListener('pointerup', up)
+            window.removeEventListener('pointercancel', up)
+            // simple toucher : bascule entre « tout en haut » et la disposition normale
+            if (!moved) setTopH((h) => (h ? null : window.innerHeight - 150))
+          }
+          window.addEventListener('pointermove', mv)
+          window.addEventListener('pointerup', up)
+          window.addEventListener('pointercancel', up)
+        }}
+      >
+        <i />
+      </div>
       <Calendar
         selected={quiet ? selected : null}
         projectId={projectId}
