@@ -1,0 +1,14 @@
+Police "Lineal" (celle de ta maquette Figma)
+============================================
+
+Je n'ai pas pu la télécharger depuis mon environnement. Dépose ici :
+
+  Lineal-Regular.woff2   (ou Lineal-Regular.otf)
+  Lineal-Italic.woff2    (ou Lineal-Italic.otf)   <- facultatif, utilisé pour les mois à venir
+
+Tant que les fichiers manquent, l'app utilise une police système de repli.
+Si Lineal est déjà installée sur ton ordinateur, elle est utilisée automatiquement
+sur cet appareil (via local('Lineal')).
+
+Pour convertir un .otf/.ttf en .woff2 : https://github.com/google/woff2 ou
+n'importe quel convertisseur en ligne.

@@ -1,0 +1,5 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# Adresse de ton PocketBase en ligne (https). À régler dans Netlify : Site configuration > Environment variables > VITE_PB_URL

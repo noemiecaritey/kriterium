@@ -1,0 +1,16 @@
+{
+  "name": "kriterium",
+  "short_name": "kriterium",
+  "description": "Un agenda plus complexe, avec des widgets et des œuvres d'art à gagner.",
+  "lang": "fr",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#010101",
+  "theme_color": "#010101",
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
