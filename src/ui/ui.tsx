@@ -1,3 +1,4 @@
+import { createPortal } from 'react-dom'
 import { useEffect, useRef, type CSSProperties, type ReactNode } from 'react'
 import { back, nav } from '../lib/router'
 import { EVENT_COLORS, GRADIENTS } from '../lib/palette'
@@ -110,7 +111,8 @@ export function Sheet(props: { open: boolean; onClose: () => void; title?: strin
     }
   }, [open, onClose])
   if (!open) return null
-  return (
+  // dans <body> : à l'abri des zones qui défilent (sur iPhone, une fenêtre fixe posée dans une zone qui défile ne défile plus)
+  return createPortal(
     <div className="sheet-ov" ref={ov} onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
       <div className={'sheet' + (props.tall ? ' sheet--tall' : '')} ref={ref} role="dialog" aria-modal="true" aria-label={props.title}>
         <button className="sheet-x" onClick={onClose} aria-label="Fermer">
@@ -119,7 +121,8 @@ export function Sheet(props: { open: boolean; onClose: () => void; title?: strin
         {props.title && <h2 className="sheet-title">{props.title}</h2>}
         {props.children}
       </div>
-    </div>
+    </div>,
+    document.body,
   )
 }
 
